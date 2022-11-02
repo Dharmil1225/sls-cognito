@@ -1,0 +1,118 @@
+service: sls-api
+frameworkVersion: "3"
+
+plugins:
+  - serverless-offline
+  - serverless-bundle
+
+useDotenv: true
+custom:
+  bundle:
+    ignorePackages:
+      - pg-native
+package:
+  exclude:
+    - node_modules/**
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: ap-south-1
+  profile: slsuser
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - rds:*
+            - cognito-idp:*
+          Resource: "*"
+  environment:
+    aws_access_key_id: ${env:aws_access_key_id}
+    aws_secret_access_key: ${env:aws_secret_access_key}
+    postgres_username: ${env:postgres_username}
+    postgres_password: ${env:postgres_password}
+    postgres_dbname: ${env:postgres_dbname}
+    postgres_aws_endpoint: ${env:postgres_aws_endpoint}
+    jwt_secret: ${env:jwt_secret}
+    user_pool_id: ${env:user_pool_id}
+    app_client_id: ${env:app_client_id}
+
+resources:
+  Resources:
+    MyUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: !Ref CognitoUserPoolName
+        Schema:
+          - AttributeDataType: String
+          - Name: email
+            Required: true
+            Mutable: true
+        Policies:
+          PasswordPolicy:
+            MinimumLength: 8
+        AutoVerifiedAttributes: ["email"]
+        UsernameAttributes:
+          - email
+
+    MyUserClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: !Ref CognitoUserPoolClientName
+        UserPoolId: !Ref MyUserPool
+        GenerateSecret: false
+
+functions:
+  createUser:
+    handler: src/createUser.createUser
+    events:
+      - httpApi:
+          path: /users
+          method: post
+
+  getUser:
+    handler: src/getUser.getUser
+    events:
+      - httpApi:
+          path: /users
+          method: get
+
+  updateUser:
+    handler: src/updateUser.updateUser
+    events:
+      - httpApi:
+          path: /users/{id}
+          method: put
+
+  getUserById:
+    handler: src/getUserById.getUserById
+    events:
+      - httpApi:
+          path: /users/{id}
+          method: get
+
+  deleteUser:
+    handler: src/deleteUser.deleteUser
+    events:
+      - httpApi:
+          path: /users/{id}
+          method: delete
+
+  signUp:
+    handler: src/signUp.signUp
+    events:
+      - cognitoUserPool:
+          pool: Auth
+          trigger: CustomMessage
+          existing: true
+      - httpApi:
+          path: /signUp
+          method: post
+
+  verify:
+    handler: src/verify.verify
+    events:
+      - httpApi:
+          path: /email
+          method: post
