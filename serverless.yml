@@ -116,3 +116,10 @@ functions:
       - httpApi:
           path: /email
           method: post
+
+  resendCode:
+    handler: src/resendCode.resendCode
+    events:
+      - httpApi:
+          path: /resendcode
+          method: post
