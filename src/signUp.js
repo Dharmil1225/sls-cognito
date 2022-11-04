@@ -20,20 +20,27 @@ export const signUp = async (event) => {
   attributeList.push(attributeEmail);
   console.log(attributeList);
 
-  userPool.signUp(
-    username,
-    password,
-    attributeList,
-    null,
-    function (err, data) {
-      if (err) {
-        console.log(err.message || JSON.stringify(err));
-        return;
-      }
-      const cognitoUser = data.user;
-      console.log("Username is " + cognitoUser.getUsername());
+  await new Promise((res, rej) => {
+    try {
+      userPool.signUp(
+        username,
+        password,
+        attributeList,
+        null,
+        function (err, data) {
+          if (err) {
+            console.log(err.message || JSON.stringify(err));
+            return;
+          }
+          const cognitoUser = data.user;
+          console.log("Username is " + cognitoUser.getUsername());
+          res(data);
+        }
+      );
+    } catch (error) {
+      rej(error);
     }
-  );
+  });
 
   return {
     statusCode: 200,

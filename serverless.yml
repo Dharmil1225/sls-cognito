@@ -26,6 +26,9 @@ provider:
           Action:
             - rds:*
             - cognito-idp:*
+            - "mobileanalytics:PutEvents"
+            - "cognito-sync:*"
+            - "cognito-identity:*"
           Resource: "*"
   environment:
     aws_access_key_id: ${env:aws_access_key_id}
@@ -122,4 +125,11 @@ functions:
     events:
       - httpApi:
           path: /resendcode
+          method: post
+
+  login:
+    handler: src/getToken.getToken
+    events:
+      - httpApi:
+          path: /token
           method: post
