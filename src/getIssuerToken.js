@@ -10,7 +10,6 @@ export const getIssuerToken = async (event) => {
 
   const { tokens } = await client.getToken({ code });
   client.setCredentials(tokens);
-  console.log(tokens);
 
   client.on("tokens", (tokens) => {
     if (tokens.refresh_token) {

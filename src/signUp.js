@@ -10,7 +10,6 @@ export const signUp = async (event) => {
     UserPoolId: process.env.user_pool_id,
     ClientId: process.env.app_client_id,
   };
-  console.log(chalk.bgMagenta("poolData"), poolData);
   const userPool = new CognitoUserPool(poolData);
   const attributeList = [];
   const dataEmail = {
@@ -20,7 +19,6 @@ export const signUp = async (event) => {
 
   const attributeEmail = new CognitoUserAttribute(dataEmail);
   attributeList.push(attributeEmail);
-  console.log(attributeList);
   const userData = await new Promise((res, rej) => {
     try {
       userPool.signUp(
@@ -47,7 +45,6 @@ export const signUp = async (event) => {
       rej(error);
     }
   });
-  console.log(chalk.bgCyan("userData"), userData);
   return {
     statusCode: 200,
     body: JSON.stringify({

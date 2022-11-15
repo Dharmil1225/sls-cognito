@@ -25,7 +25,6 @@ export const getUserById = async (event) => {
     };
   }
   const getUser = await User.findOne({ where: { id } });
-  console.log(getUser);
   try {
     if (!getUser) {
       return {

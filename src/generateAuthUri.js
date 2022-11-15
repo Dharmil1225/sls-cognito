@@ -20,7 +20,6 @@ export const generateAuthUri = async () => {
     prompt: "consent",
     scope: scopes,
   });
-  console.log(chalk.bgGreen("URL"), url);
   return {
     statusCode: 200,
     body: JSON.stringify({

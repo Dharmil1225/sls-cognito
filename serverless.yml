@@ -139,13 +139,6 @@ functions:
           path: /token
           method: post
 
-  thirdParty:
-    handler: src/thirdPartyLogin.thirdPartyLogin
-    events:
-      - httpApi:
-          path: /sso
-          method: post
-
   generateAuthUri:
     handler: src/generateAuthUri.generateAuthUri
     events:
