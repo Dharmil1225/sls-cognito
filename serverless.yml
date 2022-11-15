@@ -40,31 +40,36 @@ provider:
     jwt_secret: ${env:jwt_secret}
     user_pool_id: ${env:user_pool_id}
     app_client_id: ${env:app_client_id}
+    aws_region: ${env:aws_region}
+    app_domain_name: ${env:app_domain_name}
+    google_client_id: ${env:google_client_id}
+    google_client_secret: ${env:google_client_secret}
+    google_redirect_uri: ${env:google_redirect_uri}
 
-resources:
-  Resources:
-    MyUserPool:
-      Type: AWS::Cognito::UserPool
-      Properties:
-        UserPoolName: !Ref CognitoUserPoolName
-        Schema:
-          - AttributeDataType: String
-          - Name: email
-            Required: true
-            Mutable: true
-        Policies:
-          PasswordPolicy:
-            MinimumLength: 8
-        AutoVerifiedAttributes: ["email"]
-        UsernameAttributes:
-          - email
+# resources:
+#   Resources:
+#     MyUserPool:
+#       Type: AWS::Cognito::UserPool
+#       Properties:
+#         UserPoolName: !Ref CognitoUserPoolName
+#         Schema:
+#           - AttributeDataType: String
+#           - Name: email
+#             Required: true
+#             Mutable: true
+#         Policies:
+#           PasswordPolicy:
+#             MinimumLength: 8
+#         AutoVerifiedAttributes: ["email"]
+#         UsernameAttributes:
+#           - email
 
-    MyUserClient:
-      Type: AWS::Cognito::UserPoolClient
-      Properties:
-        ClientName: !Ref CognitoUserPoolClientName
-        UserPoolId: !Ref MyUserPool
-        GenerateSecret: false
+#     MyUserClient:
+#       Type: AWS::Cognito::UserPoolClient
+#       Properties:
+#         ClientName: !Ref CognitoUserPoolClientName
+#         UserPoolId: !Ref MyUserPool
+#         GenerateSecret: false
 
 functions:
   createUser:
@@ -127,9 +132,37 @@ functions:
           path: /resendcode
           method: post
 
-  login:
+  getToken:
     handler: src/getToken.getToken
     events:
       - httpApi:
           path: /token
+          method: post
+
+  thirdParty:
+    handler: src/thirdPartyLogin.thirdPartyLogin
+    events:
+      - httpApi:
+          path: /sso
+          method: post
+
+  generateAuthUri:
+    handler: src/generateAuthUri.generateAuthUri
+    events:
+      - httpApi:
+          path: /generateAuthUri
+          method: post
+
+  getIssuerToken:
+    handler: src/getIssuerToken.getIssuerToken
+    events:
+      - httpApi:
+          path: /getIssuerToken
+          method: post
+
+  getPayload:
+    handler: src/getPayload.getPayload
+    events:
+      - httpApi:
+          path: /getPayload
           method: post

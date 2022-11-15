@@ -2,6 +2,7 @@ import {
   CognitoUserAttribute,
   CognitoUserPool,
 } from "amazon-cognito-identity-js";
+import chalk from "chalk";
 
 export const signUp = async (event) => {
   const { email, username, password } = JSON.parse(event.body);
@@ -9,6 +10,7 @@ export const signUp = async (event) => {
     UserPoolId: process.env.user_pool_id,
     ClientId: process.env.app_client_id,
   };
+  console.log(chalk.bgMagenta("poolData"), poolData);
   const userPool = new CognitoUserPool(poolData);
   const attributeList = [];
   const dataEmail = {
@@ -19,8 +21,7 @@ export const signUp = async (event) => {
   const attributeEmail = new CognitoUserAttribute(dataEmail);
   attributeList.push(attributeEmail);
   console.log(attributeList);
-
-  await new Promise((res, rej) => {
+  const userData = await new Promise((res, rej) => {
     try {
       userPool.signUp(
         username,
@@ -30,7 +31,12 @@ export const signUp = async (event) => {
         function (err, data) {
           if (err) {
             console.log(err.message || JSON.stringify(err));
-            return;
+            return {
+              statusCode: 400,
+              body: JSON.stringify({
+                error: err.message,
+              }),
+            };
           }
           const cognitoUser = data.user;
           console.log("Username is " + cognitoUser.getUsername());
@@ -41,7 +47,7 @@ export const signUp = async (event) => {
       rej(error);
     }
   });
-
+  console.log(chalk.bgCyan("userData"), userData);
   return {
     statusCode: 200,
     body: JSON.stringify({
