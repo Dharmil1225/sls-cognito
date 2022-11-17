@@ -18,7 +18,7 @@ provider:
   name: aws
   runtime: nodejs14.x
   region: ap-south-1
-  profile: slsuser
+  profile: temp_user
   iam:
     role:
       statements:
@@ -31,8 +31,6 @@ provider:
             - "cognito-identity:*"
           Resource: "*"
   environment:
-    aws_access_key_id: ${env:aws_access_key_id}
-    aws_secret_access_key: ${env:aws_secret_access_key}
     postgres_username: ${env:postgres_username}
     postgres_password: ${env:postgres_password}
     postgres_dbname: ${env:postgres_dbname}
@@ -45,31 +43,6 @@ provider:
     google_client_id: ${env:google_client_id}
     google_client_secret: ${env:google_client_secret}
     google_redirect_uri: ${env:google_redirect_uri}
-
-# resources:
-#   Resources:
-#     MyUserPool:
-#       Type: AWS::Cognito::UserPool
-#       Properties:
-#         UserPoolName: !Ref CognitoUserPoolName
-#         Schema:
-#           - AttributeDataType: String
-#           - Name: email
-#             Required: true
-#             Mutable: true
-#         Policies:
-#           PasswordPolicy:
-#             MinimumLength: 8
-#         AutoVerifiedAttributes: ["email"]
-#         UsernameAttributes:
-#           - email
-
-#     MyUserClient:
-#       Type: AWS::Cognito::UserPoolClient
-#       Properties:
-#         ClientName: !Ref CognitoUserPoolClientName
-#         UserPoolId: !Ref MyUserPool
-#         GenerateSecret: false
 
 functions:
   createUser:
@@ -110,10 +83,6 @@ functions:
   signUp:
     handler: src/signUp.signUp
     events:
-      - cognitoUserPool:
-          pool: Auth
-          trigger: CustomMessage
-          existing: true
       - httpApi:
           path: /signUp
           method: post
@@ -158,4 +127,11 @@ functions:
     events:
       - httpApi:
           path: /getPayload
+          method: post
+
+  verifyGoogleUser:
+    handler: src/verifyGoogleUser.verifyGoogleUser
+    events:
+      - httpApi:
+          path: /verifyGoogleUser
           method: post

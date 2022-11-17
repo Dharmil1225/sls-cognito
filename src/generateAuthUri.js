@@ -1,4 +1,3 @@
-import chalk from "chalk";
 import { google } from "googleapis";
 export const generateAuthUri = async () => {
   const client = new google.auth.OAuth2({

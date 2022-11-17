@@ -2,7 +2,6 @@ import {
   CognitoUserAttribute,
   CognitoUserPool,
 } from "amazon-cognito-identity-js";
-import chalk from "chalk";
 
 export const signUp = async (event) => {
   const { email, username, password } = JSON.parse(event.body);
@@ -19,7 +18,7 @@ export const signUp = async (event) => {
 
   const attributeEmail = new CognitoUserAttribute(dataEmail);
   attributeList.push(attributeEmail);
-  const userData = await new Promise((res, rej) => {
+  await new Promise((res, rej) => {
     try {
       userPool.signUp(
         username,

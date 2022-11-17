@@ -46,12 +46,12 @@ export const getPayload = async (event) => {
           EmailVerified: googlePayload.email_verified.toString(),
         },
       };
+
       const cognitoClient = new CognitoIdentityProviderClient({
         region: process.env.aws_region,
       });
-
-      const signupCommand = new SignUpCommand(params);
-      const response = await cognitoClient.send(signupCommand);
+      const signUpCommand = new SignUpCommand(params);
+      const response = await cognitoClient.send(signUpCommand);
       res(response);
     } catch (error) {
       rej(error);
@@ -61,7 +61,7 @@ export const getPayload = async (event) => {
   return {
     statusCode: 200,
     body: JSON.stringify({
-      payload: data["$metadata"],
+      payload: data,
     }),
   };
 };
