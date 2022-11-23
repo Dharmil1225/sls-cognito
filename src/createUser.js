@@ -3,22 +3,22 @@ import bcrypt from "bcryptjs";
 
 export const createUser = async (event) => {
   await db.sync();
-  const jwtToken = event["headers"]["authorization"];
-  if (!jwtToken) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify({
-        isAuthorized: false,
-      }),
-    };
-  }
-  const token = event["headers"]["authorization"].split(" ")[1];
-  if (!token) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify("Token is not defined"),
-    };
-  }
+  // const jwtToken = event["headers"]["authorization"];
+  // if (!jwtToken) {
+  //   return {
+  //     statusCode: 400,
+  //     body: JSON.stringify({
+  //       isAuthorized: false,
+  //     }),
+  //   };
+  // }
+  // const token = event["headers"]["authorization"].split(" ")[1];
+  // if (!token) {
+  //   return {
+  //     statusCode: 400,
+  //     body: JSON.stringify("Token is not defined"),
+  //   };
+  // }
 
   const { username, email, password } = JSON.parse(event.body);
   if (!event.body) {

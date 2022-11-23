@@ -18,7 +18,7 @@ provider:
   name: aws
   runtime: nodejs14.x
   region: ap-south-1
-  profile: temp_user
+  profile: default
   iam:
     role:
       statements:
@@ -34,8 +34,8 @@ provider:
     postgres_username: ${env:postgres_username}
     postgres_password: ${env:postgres_password}
     postgres_dbname: ${env:postgres_dbname}
-    postgres_aws_endpoint: ${env:postgres_aws_endpoint}
-    jwt_secret: ${env:jwt_secret}
+    postgres_smart_school: ${env:postgres_smart_school}
+    postgres_data_design: ${env:postgres_data_design}
     user_pool_id: ${env:user_pool_id}
     app_client_id: ${env:app_client_id}
     aws_region: ${env:aws_region}
@@ -43,6 +43,10 @@ provider:
     google_client_id: ${env:google_client_id}
     google_client_secret: ${env:google_client_secret}
     google_redirect_uri: ${env:google_redirect_uri}
+    smart_school_userPool_id: ${env:smart_school_userPool_id}
+    smart_school_client_id: ${env:smart_school_client_id}
+    data_design_userPool_id: ${env:data_design_userPool_id}
+    data_design_client_id: ${env:data_design_client_id}
 
 functions:
   createUser:
@@ -134,4 +138,18 @@ functions:
     events:
       - httpApi:
           path: /verifyGoogleUser
+          method: post
+
+  getUserData:
+    handler: src/getUserData.getUserData
+    events:
+      - httpApi:
+          path: /getUserData
+          method: post
+
+  getTokenWithRefreshToken:
+    handler: src/getTokenWithRefreshToken.getTokenWithRefreshToken
+    events:
+      - httpApi:
+          path: /getTokenWithRefreshToken
           method: post

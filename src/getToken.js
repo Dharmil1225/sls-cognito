@@ -4,12 +4,14 @@ import {
   AuthenticationDetails,
   CognitoUser,
 } from "amazon-cognito-identity-js";
+import chalk from "chalk";
+import { User_Smart_School } from "./database/db";
 
 export const getToken = async (event) => {
   const { email, password, username } = JSON.parse(event.body);
   const poolData = {
-    UserPoolId: process.env.user_pool_id,
-    ClientId: process.env.app_client_id,
+    UserPoolId: process.env.smart_school_userPool_id,
+    ClientId: process.env.smart_school_client_id,
   };
   const userPool = new CognitoUserPool(poolData);
 
@@ -35,7 +37,7 @@ export const getToken = async (event) => {
 
   const authenticationDetails = new AuthenticationDetails(authData);
 
-  const finalToken = await new Promise((res, rej) => {
+  const finalToken = await new Promise(async (res, rej) => {
     try {
       cognitoUser.authenticateUser(authenticationDetails, {
         onSuccess: function (result) {
@@ -54,14 +56,24 @@ export const getToken = async (event) => {
       rej(error);
     }
   });
-  if (!finalToken) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify({
-        error: "token not found",
-      }),
-    };
-  }
+  await User_Smart_School.findOne({
+    where: {
+      email: email,
+    },
+  }).then((user) => {
+    console.log(user);
+    user.tokens.push(finalToken.accessToken, finalToken.refreshToken);
+    console.log(chalk.bgMagenta("user tokens"), user.tokens);
+    User_Smart_School.update(
+      {
+        tokens: user.tokens,
+      },
+      {
+        where: { email },
+      }
+    );
+    console.log(chalk.bgBlue("user tokens"), user.tokens);
+  });
   return {
     statusCode: 200,
     body: JSON.stringify({

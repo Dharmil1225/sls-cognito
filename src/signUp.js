@@ -1,53 +1,64 @@
 import {
-  CognitoUserAttribute,
-  CognitoUserPool,
-} from "amazon-cognito-identity-js";
+  SignUpCommand,
+  CognitoIdentityProviderClient,
+} from "@aws-sdk/client-cognito-identity-provider";
+import { User_Smart_School } from "./database/db";
 
 export const signUp = async (event) => {
   const { email, username, password } = JSON.parse(event.body);
-  const poolData = {
-    UserPoolId: process.env.user_pool_id,
-    ClientId: process.env.app_client_id,
-  };
-  const userPool = new CognitoUserPool(poolData);
-  const attributeList = [];
-  const dataEmail = {
-    Name: "email",
-    Value: email,
-  };
 
-  const attributeEmail = new CognitoUserAttribute(dataEmail);
-  attributeList.push(attributeEmail);
-  await new Promise((res, rej) => {
+  await new Promise(async (res, rej) => {
     try {
-      userPool.signUp(
-        username,
-        password,
-        attributeList,
-        null,
-        function (err, data) {
-          if (err) {
-            console.log(err.message || JSON.stringify(err));
-            return {
-              statusCode: 400,
-              body: JSON.stringify({
-                error: err.message,
-              }),
-            };
-          }
-          const cognitoUser = data.user;
-          console.log("Username is " + cognitoUser.getUsername());
-          res(data);
-        }
-      );
+      const params = {
+        ClientId: process.env.smart_school_client_id,
+        Username: username,
+        Password: password,
+        UserAttributes: [
+          {
+            Name: "email",
+            Value: email,
+          },
+          {
+            Name: "custom:Username",
+            Value: username,
+          },
+        ],
+      };
+      const client = new CognitoIdentityProviderClient({
+        region: process.env.aws_region,
+      });
+      const command = new SignUpCommand(params);
+      const response = await client.send(command);
+      res(response);
     } catch (error) {
       rej(error);
     }
   });
+
+  const userData = await new Promise(async (res, rej) => {
+    try {
+      const existingUser = await User_Smart_School.findOne({
+        where: { email },
+      });
+      if (existingUser) {
+        return "user already exist";
+      }
+      const newUser = await User_Smart_School.create({
+        email,
+        username,
+        password,
+      });
+      res(newUser);
+    } catch (error) {
+      rej(error);
+      console.log(error);
+    }
+  });
+
   return {
     statusCode: 200,
     body: JSON.stringify({
-      msg: "User Signed Up",
+      data: userData,
     }),
   };
 };
