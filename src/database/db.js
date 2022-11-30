@@ -8,6 +8,7 @@ export const smart_school_db = new Sequelize(
     dialect: "postgres",
     host: process.env.postgres_smart_school,
     dialectModule: pg,
+    port: 5432,
   }
 );
 
@@ -54,6 +55,7 @@ export const data_design_db = new Sequelize(
     dialect: "postgres",
     host: process.env.postgres_data_design,
     dialectModule: pg,
+    port: 5432,
   }
 );
 

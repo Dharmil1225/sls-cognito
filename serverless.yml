@@ -49,40 +49,40 @@ provider:
     data_design_client_id: ${env:data_design_client_id}
 
 functions:
-  createUser:
-    handler: src/createUser.createUser
-    events:
-      - httpApi:
-          path: /users
-          method: post
+  # createUser:
+  #   handler: src/createUser.createUser
+  #   events:
+  #     - httpApi:
+  #         path: /users
+  #         method: post
 
-  getUser:
-    handler: src/getUser.getUser
-    events:
-      - httpApi:
-          path: /users
-          method: get
+  # getUser:
+  #   handler: src/getUser.getUser
+  #   events:
+  #     - httpApi:
+  #         path: /users
+  #         method: get
 
-  updateUser:
-    handler: src/updateUser.updateUser
-    events:
-      - httpApi:
-          path: /users/{id}
-          method: put
+  # updateUser:
+  #   handler: src/updateUser.updateUser
+  #   events:
+  #     - httpApi:
+  #         path: /users/{id}
+  #         method: put
 
-  getUserById:
-    handler: src/getUserById.getUserById
-    events:
-      - httpApi:
-          path: /users/{id}
-          method: get
+  # getUserById:
+  #   handler: src/getUserById.getUserById
+  #   events:
+  #     - httpApi:
+  #         path: /users/{id}
+  #         method: get
 
-  deleteUser:
-    handler: src/deleteUser.deleteUser
-    events:
-      - httpApi:
-          path: /users/{id}
-          method: delete
+  # deleteUser:
+  #   handler: src/deleteUser.deleteUser
+  #   events:
+  #     - httpApi:
+  #         path: /users/{id}
+  #         method: delete
 
   signUp:
     handler: src/signUp.signUp
@@ -105,51 +105,51 @@ functions:
           path: /resendcode
           method: post
 
-  getToken:
-    handler: src/getToken.getToken
-    events:
-      - httpApi:
-          path: /token
-          method: post
+  # getToken:
+  #   handler: src/getToken.getToken
+  #   events:
+  #     - httpApi:
+  #         path: /token
+  #         method: post
 
-  generateAuthUri:
-    handler: src/generateAuthUri.generateAuthUri
-    events:
-      - httpApi:
-          path: /generateAuthUri
-          method: post
+  # generateAuthUri:
+  #   handler: src/generateAuthUri.generateAuthUri
+  #   events:
+  #     - httpApi:
+  #         path: /generateAuthUri
+  #         method: post
 
-  getIssuerToken:
-    handler: src/getIssuerToken.getIssuerToken
-    events:
-      - httpApi:
-          path: /getIssuerToken
-          method: post
+  # getIssuerToken:
+  #   handler: src/getIssuerToken.getIssuerToken
+  #   events:
+  #     - httpApi:
+  #         path: /getIssuerToken
+  #         method: post
 
-  getPayload:
-    handler: src/getPayload.getPayload
-    events:
-      - httpApi:
-          path: /getPayload
-          method: post
+  # getPayload:
+  #   handler: src/getPayload.getPayload
+  #   events:
+  #     - httpApi:
+  #         path: /getPayload
+  #         method: post
 
-  verifyGoogleUser:
-    handler: src/verifyGoogleUser.verifyGoogleUser
-    events:
-      - httpApi:
-          path: /verifyGoogleUser
-          method: post
+  # verifyGoogleUser:
+  #   handler: src/verifyGoogleUser.verifyGoogleUser
+  #   events:
+  #     - httpApi:
+  #         path: /verifyGoogleUser
+  #         method: post
 
-  getUserData:
-    handler: src/getUserData.getUserData
-    events:
-      - httpApi:
-          path: /getUserData
-          method: post
+  # getUserData:
+  #   handler: src/getUserData.getUserData
+  #   events:
+  #     - httpApi:
+  #         path: /getUserData
+  #         method: post
 
-  getTokenWithRefreshToken:
-    handler: src/getTokenWithRefreshToken.getTokenWithRefreshToken
-    events:
-      - httpApi:
-          path: /getTokenWithRefreshToken
-          method: post
+  # getTokenWithRefreshToken:
+  #   handler: src/getTokenWithRefreshToken.getTokenWithRefreshToken
+  #   events:
+  #     - httpApi:
+  #         path: /getTokenWithRefreshToken
+  #         method: post

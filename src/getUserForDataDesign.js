@@ -3,7 +3,6 @@ import pg from "pg";
 import {
   CognitoIdentityProviderClient,
   GetUserCommand,
-  RevokeTokenCommand,
 } from "@aws-sdk/client-cognito-identity-provider";
 export const getUserForDataDesign = async (event) => {
   const { email, username, password } = JSON.parse(event.body);

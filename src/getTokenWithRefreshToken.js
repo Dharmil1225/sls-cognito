@@ -11,8 +11,7 @@ export const getTokenWithRefreshToken = async (event) => {
   });
 
   const command = new RevokeTokenCommand({
-    ClientId: process.env.google_client_id,
-    ClientSecret: process.env.google_client_secret,
+    ClientId: process.env.smart_school_client_id,
     Token: refreshToken,
   });
 
