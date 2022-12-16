@@ -105,6 +105,13 @@ functions:
           path: /resendcode
           method: post
 
+  login:
+    handler: src/login.login
+    events:
+      - httpApi:
+          path: /login
+          method: post
+
   # getToken:
   #   handler: src/getToken.getToken
   #   events:
